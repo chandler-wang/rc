@@ -13,6 +13,7 @@ public:
 signals:
 
 public slots:
+    void run();
 };
 
 #endif // MESSAGEMANAGER_H

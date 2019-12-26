@@ -19,6 +19,10 @@ public:
     ~MainWindow();
 
 private:
+    void initMessageThread(void);
+    void cleanMessageThread(void);
+
+private:
     Ui::MainWindow *ui;
 
     MessageManager *messageManager;
