@@ -26,11 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    message/messagemanager.cpp
+    message/messagemanager.cpp \
+    receiver/r12ds.cpp
 
 HEADERS += \
         mainwindow.h \
-    message/messagemanager.h
+    message/messagemanager.h \
+    receiver/receiver.h \
+    receiver/r12ds.h
 
 FORMS += \
         mainwindow.ui
