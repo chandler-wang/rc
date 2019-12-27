@@ -1,18 +1,25 @@
 #ifndef RECEIVER_H
 #define RECEIVER_H
 
+#include "port/port.h"
 
-class IReceiver
+#include <QObject>
+
+class Receiver : public QObject
 {
 public:
-    virtual ~IReceiver()=0;
+    Receiver();
+    ~Receiver();
 
-    virtual void receive(char* buf, int len)=0;
+private:
+    IPort *port;
+
+//    virtual void receive(char* buf, int len)=0;
 };
 
-IReceiver::~IReceiver()
-{
+//IReceiver::~IReceiver()
+//{
 
-}
+//}
 
 #endif // RECEIVER_H

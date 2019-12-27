@@ -27,13 +27,22 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     message/messagemanager.cpp \
-    receiver/r12ds.cpp
+    message/taskmanager.cpp \
+    port/serial.cpp \
+    port/usart2.cpp \
+    receiver/receiver.cpp \
+    port/port.cpp
 
 HEADERS += \
         mainwindow.h \
     message/messagemanager.h \
     receiver/receiver.h \
-    receiver/r12ds.h
+    message/task.h \
+    message/taskmanager.h \
+    port/port.h \
+    port/serial.h \
+    global.h \
+    port/usart2.h
 
 FORMS += \
         mainwindow.ui
