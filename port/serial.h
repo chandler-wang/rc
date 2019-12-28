@@ -4,10 +4,11 @@
 #include "port.h"
 
 #include <QMutex>
+#include <QObject>
 
-class Serial : public IPort
+class Serial : public QObject, public IPort
 {
-
+    Q_OBJECT
 public:
 //    Serial();
     virtual ~Serial();
@@ -42,17 +43,18 @@ public:
     int writeData(char* txBuffer, int bytes);
     int flush(int flag);
 
-protected:
+public slots:
+    virtual void run()=0;
 
+protected:
     virtual void initSerialPort(int dataBits, int parity, int stopBits, int baud)=0;
+
     void initFD();
     void setDataBits(int dataBits);
     void setParity(int parity);
     void setStopBits(int stopBits);
     void setBaudrate(int baudrate);
     void setDevName(char* name);
-//    void setRxBuffer(char* rxbuf);
-//    void setTxBuffer(char* txbuf);
 
     void printBuf(char *buf, int len);
 
@@ -70,14 +72,6 @@ private:
 
     QMutex rxMutex;
     QMutex txMutex;
-
-//    char *txBuffer;
-//    int sendBytes;
-//    bool txBufferReady;
-
-//    char *rxBuffer;
-//    int recvBytes;
-//    bool rxReady;
 };
 
 #endif // SERIAL_H

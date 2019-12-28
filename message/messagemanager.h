@@ -14,6 +14,7 @@ signals:
 
 public slots:
     void run();
+    void handleMessage(int value);
 };
 
 #endif // MESSAGEMANAGER_H

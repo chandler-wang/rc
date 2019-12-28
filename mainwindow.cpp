@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "message/ithread.h"
+
 #include <unistd.h>
 #include <QDebug>
 
@@ -10,7 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    initMessageThread();
+//    QMap<QObject*, QThread*> *m;
+//    m = new QMap<QObject*, QThread*>();
+//    IThread::setMap(m);
+
+    createThreadManager();
+    connect(this,SIGNAL(managerOperation(signal_data_t*)), threadManager, SLOT(doOperation(signal_data_t*)));
 
     qDebug("MainWindow::MainWindow()");
 }
@@ -19,44 +26,54 @@ MainWindow::~MainWindow()
 {
     delete ui;
 
-    cleanMessageThread();
+    destroyThreadManager();
 
     qDebug("MainWindow::~MainWindow()");
 }
 
-void MainWindow::initMessageThread(void)
+void MainWindow::createThreadManager(void)
 {
-    messageManager = new MessageManager();
-    messageThread = new QThread(this);
-    connect(messageThread, SIGNAL(started()), messageManager, SLOT(run()));
-    messageManager->moveToThread(messageThread);
-    messageThread->start();
+    threadManager = new ThreadManager;
+    managerThread = new QThread(this);
+    threadManager->moveToThread(managerThread);
+
+    managerThread->start();
 }
 
-void MainWindow::cleanMessageThread(void)
+void MainWindow::destroyThreadManager(void)
 {
     usleep(1000*10);
 
-    if (messageThread)
+    if (managerThread)
     {
-        if (messageThread->isRunning())
+        if (managerThread->isRunning())
         {
-            messageThread->quit();
-            messageThread->wait();
+            managerThread->quit();
+            managerThread->wait();
         }
 
-        if (messageManager)
+        if (threadManager)
         {
-            disconnect(messageThread, SIGNAL(started()), messageManager, SLOT(run()));
+            disconnect(this,SIGNAL(managerOperation(signal_data_t*)), threadManager, SLOT(doOperation(signal_data_t*)));
         }
 
-        delete messageThread;
-        messageThread = NULL;
+        delete managerThread;
+        managerThread = NULL;
     }
 
-    if (messageManager)
+    if (threadManager)
     {
-        delete messageManager;
-        messageManager = NULL;
+        delete threadManager;
+        threadManager = NULL;
     }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    signal_data_t sd;
+
+    qDebug("MainWindow::on_pushButton_clicked");
+    sd.index = 0;
+
+    emit managerOperation(&sd);
 }

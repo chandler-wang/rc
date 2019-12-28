@@ -26,23 +26,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    message/messagemanager.cpp \
-    message/taskmanager.cpp \
     port/serial.cpp \
     port/usart2.cpp \
-    receiver/receiver.cpp \
-    port/port.cpp
+    port/port.cpp \
+    message/threadmanager.cpp \
+    message/ithread.cpp \
+    receiver/receiver.cpp
 
 HEADERS += \
         mainwindow.h \
-    message/messagemanager.h \
-    receiver/receiver.h \
-    message/task.h \
-    message/taskmanager.h \
     port/port.h \
     port/serial.h \
     global.h \
-    port/usart2.h
+    port/usart2.h \
+    message/threadmanager.h \
+    message/ithread.h \
+    receiver/receiver.h
 
 FORMS += \
         mainwindow.ui

@@ -1,8 +1,12 @@
 #ifndef PORT_H
 #define PORT_H
 
-class IPort
+//#include <QObject>
+
+class IPort //: public QObject
 {
+//    Q_OBJECT
+
 public:
     virtual ~IPort();
 

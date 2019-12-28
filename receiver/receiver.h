@@ -7,19 +7,18 @@
 
 class Receiver : public QObject
 {
+    Q_OBJECT
 public:
     Receiver();
     ~Receiver();
+    void init (int dataBits, int parity, int stopBits, int baud);
+
+public slots:
+    void run();
 
 private:
     IPort *port;
-
-//    virtual void receive(char* buf, int len)=0;
+    QThread* thread;
 };
-
-//IReceiver::~IReceiver()
-//{
-
-//}
 
 #endif // RECEIVER_H
