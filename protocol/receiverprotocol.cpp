@@ -25,6 +25,7 @@ CH: 352 352 352 992 1632 1632 1632 992 1632 992 992 992 000 000 000 000
 void ReceiverProtocol::parse(char* buf, int* ch)
 {
     sbusPackage_t *data = (sbusPackage_t *)buf;
+    static int c = 0;
 
     if ((data->start == SBUS_STARTBIT) && (data->end == SBUS_ENDBIT)){
         ch[ 0] = (buf[ 1] | (buf[2] << 8)) &0x07ff;                                     //!< Channel 0
@@ -44,6 +45,9 @@ void ReceiverProtocol::parse(char* buf, int* ch)
         ch[14] = ((buf[20] >> 2) | (buf[21] << 6)) &0x07ff;								//!< Channel 14
         ch[15] = ((buf[21] >> 5) | (buf[22] << 3)) &0x07ff;								//!< Channel 15
 
+        if (c++ % (50*1/2) == 0) // 500ms
+            qDebug("Invalid data");
+
         for (int i = 0; i < 16; i++){
             printf("%d ", ch[i]);
             if (i == 7)
@@ -55,6 +59,7 @@ void ReceiverProtocol::parse(char* buf, int* ch)
     }
     else{
         memset(ch, 0, 16);
-        qDebug("Invalid data");
+        if (c++ % (5*4) == 0) // 400ms
+            qDebug("Invalid data");
     }
 }

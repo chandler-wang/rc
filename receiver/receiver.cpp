@@ -36,7 +36,7 @@ void Receiver::run()
     int result[16];
 
     while(true){
-        sleep(1);
+        usleep(1000*20);
 //        qDebug("Hello, Receiver");
 
         memset(buf, 0, 1024);
