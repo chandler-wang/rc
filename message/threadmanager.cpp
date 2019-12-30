@@ -74,6 +74,7 @@ void ThreadManager::stopAndDestroyThreads(void)
 
 void ThreadManager::doOperation(signal_data_t *sd)
 {
+    Q_UNUSED(sd);
     qDebug("ThreadManager::doOperation");
 
 //    int index = 0;

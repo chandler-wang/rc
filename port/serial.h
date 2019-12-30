@@ -43,6 +43,9 @@ public:
     int writeData(char* txBuffer, int bytes);
     int flush(int flag);
 
+    //++++++++++++++++++++++++
+    void setSpecifiedBaudrate(int baudrate);
+
 public slots:
     virtual void run()=0;
 
@@ -52,11 +55,12 @@ protected:
     void initFD();
     void setDataBits(int dataBits);
     void setParity(int parity);
-    void setStopBits(int stopBits);
+    void setStopBits(int stopBits);    
     void setBaudrate(int baudrate);
     void setDevName(char* name);
 
     void printBuf(char *buf, int len);
+
 
 private:
     int termiosInit(struct termios *tios); // int parity, int data_bits, int stop_bits);

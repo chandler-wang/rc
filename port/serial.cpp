@@ -12,6 +12,20 @@
 #include <errno.h>      /* Error definitions */
 #include <sys/mman.h>
 
+///////////////////////////////
+#include <sched.h>
+#include <sys/ioctl.h>
+#include <linux/serial.h>
+//#include <unistd.h>
+//#include <termios.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+//#include <fcntl.h>
+//#include <stdlib.h>
+//#include <stdio.h>
+//#include <strings.h>
+///////////////////////////////
+
 #define  CMSPAR 010000000000
 
 //Serial::Serial()
@@ -56,16 +70,6 @@ void Serial::setBaudrate(int baudrate)
 {
     this->baudrate = baudrate;
 }
-
-//void Serial::setRxBuffer(char* rxbuf)
-//{
-//    this->rxBuffer = rxbuf;
-//}
-
-//void Serial::setTxBuffer(char* txbuf)
-//{
-//    this->txBuffer = txbuf;
-//}
 
 void Serial::setDevName(char* name)
 {
@@ -199,6 +203,48 @@ int Serial::termiosInit(struct termios *tios)
     return OK;
 }
 
+//设置波特率，比如28800, 100000
+void Serial::setSpecifiedBaudrate(int baudrate)
+{
+    int   status;
+    struct termios   Opt;
+    struct serial_struct serialStruct;
+
+    tcgetattr(fd, &Opt);
+    tcflush(fd, TCIOFLUSH);
+    qDebug("\ncfsetispeed(&Opt,B38400)\n");
+
+    cfsetispeed(&Opt, B38400);
+    cfsetospeed(&Opt, B38400);
+    tcflush(fd,TCIOFLUSH);
+    status = tcsetattr(fd, TCSANOW, &Opt);
+    if  (status != 0)
+    {
+        perror("tcsetattr fd1");
+        return;
+    }
+
+    if((ioctl(fd,TIOCGSERIAL, &serialStruct))<0)
+    {
+        qDebug("Fail to get Serial!\n");
+        return;
+    }
+
+    qDebug("TIOCGSERIAL: OK.\n");
+    serialStruct.flags = ASYNC_SPD_CUST;
+    serialStruct.custom_divisor=serialStruct.baud_base/baudrate;
+    qDebug("divisor is %x\n",serialStruct.custom_divisor);
+    if((ioctl(fd,TIOCSSERIAL,&serialStruct))<0)
+    {
+        qDebug("Fail to set Serial\n");
+        return;
+    }
+
+    qDebug("TIOCSSERIAL: OK.\n");
+    ioctl(fd,TIOCGSERIAL,&serialStruct);
+    qDebug("\nBAUD: success set baud to %d,custom_divisor=%d,baud_base=%d\n",baudrate,serialStruct.custom_divisor,serialStruct.baud_base);
+}
+
 /*
  * return serial fd, error return -1
  */
@@ -213,6 +259,7 @@ int Serial::openPort(void)
     if (fd_tmp >= 0)
         return ret;
 
+    qDebug("openPort: 1.");
     if (termiosInit(&settings)<0)
     {
 //        char warning[100];
@@ -225,6 +272,8 @@ int Serial::openPort(void)
 //    serial_dev_name = get_serial_dev_name();
     //qDebug("serial_port_node: %s", serial_dev_name);
     //if (serial_dev_name == NULL)
+
+    qDebug("openPort: 2.");
     if (devName == NULL)
     {
 //        char warning[100];
@@ -234,6 +283,7 @@ int Serial::openPort(void)
         return ret;
     }
 
+    qDebug("openPort: 3.");
     if((fd_tmp = open(devName, O_RDWR | O_NOCTTY | O_NDELAY))< 0) // 非阻塞
     {
 //        char warning[100];
@@ -243,6 +293,7 @@ int Serial::openPort(void)
         return ret;
     }
 
+    qDebug("openPort: 4.");
     if(tcgetattr(fd_tmp, &old_tios) < 0)
     {
 //        char warning[100];
@@ -253,6 +304,7 @@ int Serial::openPort(void)
         return ret;
     }
 
+    qDebug("openPort: 5.");
     if(tcsetattr(fd_tmp, TCSANOW, &settings) < 0)
     {
 //        char warning[100];
@@ -266,6 +318,7 @@ int Serial::openPort(void)
     fd = fd_tmp;
     ret = OK;
 
+    qDebug("openPort: final ok.");
     return ret;
 }
 

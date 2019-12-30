@@ -35,11 +35,12 @@ void USART2::initSerialPort(int dataBits, int parity, int stopBits, int baud)
     memset(txBuf, 0, 1024);
     memset(rxBuf, 0, 1024);
 
-    flush(Serial::FLUSH_RX|Serial::FLUSH_RX);
+//    flush(Serial::FLUSH_RX|Serial::FLUSH_RX);
 }
 
 USART2* USART2::getInstance(void)
 {
+//    int result = 0;
     if(!s_pInstance)
     {
         s_pInstance = new USART2;
@@ -48,14 +49,26 @@ USART2* USART2::getInstance(void)
     }    
 
     connect(thread, SIGNAL(started()), s_pInstance, SLOT(run()));
+//    result = s_pInstance->openPort();
+//    qDebug("USART2* USART2::getInstance: openPort() = %d", result);
 
     return s_pInstance;
 }
 
 void USART2::run()
 {
+    char buf[1024];
+    memset(buf, 0, 1024);
+
     while(true){
-        sleep(2);
-        qDebug("Hello, usart2");
+        usleep(1);
+        //qDebug("Hello, usart2 ");
+        //writeData("hello, world\n", strlen("hello, world\n"));
+
+        if (readData(buf, 1024) > 0){
+            qDebug("%s", buf);
+            memset(buf, 0, 1024);
+        }
+
     }
 }
