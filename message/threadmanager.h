@@ -19,6 +19,8 @@ private:
     void startThreads(void);
     void stopAndDestroyThreads(void);
 
+    void parse(char*buf, int *result);
+
 public slots:
     void doOperation(signal_data_t *sd);
 

@@ -8,6 +8,7 @@
 Receiver::Receiver()
 {
     port = USART2::getInstance();
+//    protocol = new ReceiverProtocol;
 }
 
 Receiver::~Receiver()
@@ -31,8 +32,15 @@ void Receiver::init (int dataBits, int parity, int stopBits, int baud)
 
 void Receiver::run()
 {
+    char buf[1024];
+    int result[16];
+
     while(true){
-        sleep(10);
-        qDebug("Hello, Receiver");
+        sleep(1);
+//        qDebug("Hello, Receiver");
+
+        memset(buf, 0, 1024);
+        ((USART2*)port)->getData(buf);
+        ReceiverProtocol::parse(buf, result);
     }
 }

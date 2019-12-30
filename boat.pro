@@ -31,7 +31,8 @@ SOURCES += \
     port/port.cpp \
     message/threadmanager.cpp \
     message/ithread.cpp \
-    receiver/receiver.cpp
+    receiver/receiver.cpp \
+    protocol/receiverprotocol.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     port/usart2.h \
     message/threadmanager.h \
     message/ithread.h \
-    receiver/receiver.h
+    receiver/receiver.h \
+    protocol/receiverprotocol.h
 
 FORMS += \
         mainwindow.ui

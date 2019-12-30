@@ -2,6 +2,7 @@
 #define RECEIVER_H
 
 #include "port/port.h"
+#include "protocol/receiverprotocol.h"
 
 #include <QObject>
 
@@ -19,6 +20,7 @@ public slots:
 private:
     IPort *port;
     QThread* thread;
+//    ReceiverProtocol *protocol;
 };
 
 #endif // RECEIVER_H
